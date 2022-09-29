@@ -83,7 +83,7 @@ void QSort(Road road[], int left, int right)
         Road key = road[p];
         while (p < q)
         {
-            while (p < q && road[q].w > key.w)
+            while (p < q && road[q].w >= key.w)
                 --q;
             if (p < q)
             {
@@ -91,7 +91,7 @@ void QSort(Road road[], int left, int right)
                 p++;
             }
 
-            while (p < q && road[p].w < key.w)
+            while (p < q && road[p].w <= key.w)
                 ++p;
             if (p < q)
             {

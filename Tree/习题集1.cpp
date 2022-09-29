@@ -35,11 +35,23 @@ BTree PreInCreate(int A[], int B[], int l1, int r1, int l2, int r2)
         root->lchild = NULL;
     if (rlen)
     {
-        root->rchild = PreInCreate(A, B, r1 - rlen + 1, r1, r2 - rlen + 1, r2);
+        // root->rchild = PreInCreate(A, B, r1 - rlen + 1, r1, r2 - rlen + 1, r2);
+        root->rchild = PreInCreate(A, B, r1 - rlen + 1, r1, l2 + llen + 1, r2);
+
     }
     else
         root->rchild = NULL;
     return root;
+}
+//先序遍历
+void PreOrder(BTree T){
+    if (T)
+    {
+        visit(T);
+        PreOrder(T->lchild);
+        PreOrder(T->rchild);
+    }else return;
+    
 }
 //中序遍历
 void InOrder(BTree T)
@@ -67,48 +79,30 @@ void PostOrder(BTree T)
 bool isComplete(BTree T)
 {
     BTNode *queue[maxSize];
+    //初始化置空!!!
     for (int i = 0; i < maxSize; i++)
-    {
-        queue[i] = NULL;
-    }
-    BTNode *q;
+        queue[i]=NULL;
+
     int front = 0, rear = 0;
-    int flag = 0;
-    if (T)
-        queue[rear++] = T;
+    if (!T)
+        return true;
+    queue[rear++] = T;
+    BTNode *p;
     while (front != rear)
     {
-        q = queue[front++];
-        if (!q)
+        p = queue[front++];
+        if (!p)
         {
-            front++;
-            continue;
-        }
-        if (q->lchild)
-        {
-            queue[rear++] = q->lchild;
+            for (int i = front; i <= rear; i++)
+            {
+                if (queue[i])
+                    return false;
+            }
         }
         else
         {
-            rear++;
-        }
-        if (q->rchild)
-            queue[rear++] = q->rchild;
-        else
-        {
-            rear++;
-        }
-    }
-    for (int i = 0; i < rear; i++)
-    {
-        if (!queue[i])
-        {
-            flag = 1;
-            continue;
-        }
-        if (flag && queue[i] != NULL)
-        {
-            return false;
+            queue[rear++] = p->lchild;
+            queue[rear++] = p->rchild;
         }
     }
     return true;
@@ -145,28 +139,6 @@ void print_k(BTree T, int k)
     }
 }
 
-// 1 2 4 7 10 3 5 8 9 6
-// void print_t(BTree T, int k)
-// {
-//     if (T)
-//     {
-//         if (1 == k)
-//             visit(T);
-//         else
-//         {
-//             if (T->lchild)
-//             {
-//                 k--;
-//             }
-//             print_t(T->lchild, k);
-//             if (T->rchild)
-//             {
-//                 k--;
-//             }
-//             print_t(T->rchild, k);
-//         }
-//     }
-// }
 
 // 6. 求树的宽度
 typedef struct
@@ -329,8 +301,8 @@ void PreToPost(int pre[], int l1, int r1, int post[], int l2, int r2)
     {
         post[r2] = pre[l1];
         int half = (r1 - l1) / 2;
-        PreToPost(pre, l1 + half + 1, r1, post, r2 - half, r2 - 1);
         PreToPost(pre, l1 + 1, l1 + half, post, l2, l2 + half - 1);
+        PreToPost(pre, l1 + half + 1, r1, post, r2 - half, r2 - 1);
     }
 }
 // 13.设计一个非递归方法求二叉树高度
@@ -383,75 +355,83 @@ void Linkleaf(BTree T, BTNode *&head, BTNode *&tail)
 // 15 判断两个二叉树是否相似
 bool isSimilar(BTree T1, BTree T2)
 {
-    if(T1==NULL&&T2==NULL) return true;
-    else if (T1==NULL || T2==NULL)
+    if (T1 == NULL && T2 == NULL)
+        return true;
+    else if (T1 == NULL || T2 == NULL)
         return false;
-    else {
-        return isSimilar(T1->lchild,T2->lchild)&&isSimilar(T1->rchild,T2->rchild);
+    else
+    {
+        return isSimilar(T1->lchild, T2->lchild) && isSimilar(T1->rchild, T2->rchild);
     }
 }
-//16. 设计算法输出二叉树中值为x的层号
-int level=1;
-void getlevel(BTree T,int x){
-    if (T){
-        if (T->data==x)
+// 16. 设计算法输出二叉树中值为x的层号
+int level = 1;
+void getlevel(BTree T, int x)
+{
+    if (T)
+    {
+        if (T->data == x)
         {
-            cout<<level;
+            cout << level;
         }
         ++level;
-        getlevel(T->lchild,x);
-        getlevel(T->rchild,x);
+        getlevel(T->lchild, x);
+        getlevel(T->rchild, x);
         --level;
     }
-
 }
-//17.计算二叉树叶子结点的权值和
-int leaf_weight=0;
-void getleafWeight(BTree T){
+// 17.计算二叉树叶子结点的权值和
+int leaf_weight = 0;
+void getleafWeight(BTree T)
+{
     if (!T)
         return;
-    if(T->lchild==NULL&&T->rchild==NULL){
-        leaf_weight+=T->data;
+    if (T->lchild == NULL && T->rchild == NULL)
+    {
+        leaf_weight += T->data;
     }
     getleafWeight(T->lchild);
     getleafWeight(T->rchild);
 }
-//18. 将给定的表达式转化成中缀表达式（用括号反映操作次序）
+// 18. 将给定的表达式转化成中缀表达式（用括号反映操作次序）
 //(((47)210)1((859)36))
 //((47)210)1((859)36)
-void BTreeToExp(BTree T,int deep){
+void BTreeToExp(BTree T, int deep)
+{
     if (!T)
     {
         return;
     }
-    if (T->lchild==NULL&&T->rchild==NULL)
+    if (T->lchild == NULL && T->rchild == NULL)
     {
-        cout<<T->data;
+        cout << T->data;
         return;
     }
-    if (deep>1)
-       cout<<"("; 
-    BTreeToExp(T->lchild,deep+1);
-    cout<<T->data;
-    BTreeToExp(T->rchild,deep+1);
-    if (deep>1)
-        cout<<")"; 
-
+    if (deep > 1)
+        cout << "(";
+    BTreeToExp(T->lchild, deep + 1);
+    cout << T->data;
+    BTreeToExp(T->rchild, deep + 1);
+    if (deep > 1)
+        cout << ")";
 }
 int main()
 {
     BTree T;
-    int A[] = {1, 2, 4, 5, 3};
-    int B[] = {4, 2, 5, 1, 3};
+    int A[] = {1, 2, 4, 5, 3, 6, 7};
+    int B[] = {4, 2, 5, 1, 6, 3, 7};
     BTree BT;
-    BT = PreInCreate(A, B, 0, 4, 0, 4);
+    BT = PreInCreate(A, B, 0, 6, 0, 6);
     createTree(T);
+    PreOrder(BT);
+    cout<<endl;
+    InOrder(BT);
     // cout << getHight(T);
     // Swap(T);
     // InOrder(T);
     // cout<<endl;
-    // PostOrder(T);
-    // cout<< isComplete(BT);
+    // PostOrder(BT);
+    // cout << isComplete(BT);
     // BTNode *p=NULL;
     // search(T,p,10);
     // cout<<p->data;
@@ -488,11 +468,11 @@ int main()
     // createTree(T1);
     // createTree(T2);
     // cout<<isSimilar(T,T2);
-    //16
+    // 16
     // getlevel(T,6);
-    //17
+    // 17
     // getleafWeight(T);
     // cout<<leaf_weight;
-    //18
-    BTreeToExp(T,1);
+    // 18
+    // BTreeToExp(T,1);
 }

@@ -86,26 +86,20 @@ int search2(int A[], int n, int target)
 }
 char *longestCommonPrefix(char **strs, int n)
 {
-    int min = strlen(strs[0]);
-    int count = 0;
     for (int i = 1; i < n; i++)
     {
-        count = 0;
-        for (int j = 0; j < min && j < strlen(strs[i]); j++)
+        for (int j = 0; j < strlen(strs[0]) && j < strlen(strs[i]); j++)
         {
-            if (strs[0][j] == strs[i][j])
-            {
-                count++;
+            if (strs[0][j] != strs[i][j]){
+                strs[0][j] = '\0';
+                cout<<strlen(strs[0])<<endl;
             }
-            else
-                break;
         }
-        if (count < min)
-            min = count;
     }
-    char *result = new char(min);
-    memcpy(result, strs[0], min);
-    return result;
+    // char *result = new char(min);
+    // memcpy(result, strs[0], min);
+    // return result;
+    return strs[0];
 }
 int reverse(int x)
 {
@@ -251,12 +245,12 @@ int add(char str1[], char str2[])
 int main()
 {
     // 2
-    int A[] = {6, 8, 10, 0, 2, 4};
-    cout << search2(A, 6, 4);
+    // int A[] = {6, 8, 10, 0, 2, 4};
+    // cout << search2(A, 6, 4);
     // 3
-    // char *str[100] = {"flowers", "flow", "flight"};
-    // char *result = longestCommonPrefix(str, 3);
-    // cout << result;
+    char *str[100] = {"flowers", "flow", "flight"};
+    char *result = longestCommonPrefix(str, 3);
+    cout << result;
     // 4
     // cout<<reverse(124826);
     // 5
