@@ -47,10 +47,11 @@ void QuickSort2(int A[], int low, int high)
 }
 int main()
 {
-    int A[] = {1, 4, 2, 6, 6, 8, 2, 9, 0};
-    QuickSort1(A, 0, 8);
-    for (int i = 0; i < 9; i++)
+    int A[] = {-100, -28, -17, 0, 2, 5, 7, 9, 19, 20, 100};
+    QuickSort1(A, 0, sizeof(A) / sizeof(int)-1);
+    for (int i = 0; i < sizeof(A) / sizeof(int); i++)
     {
         cout << A[i] << " ";
     }
+
 }
