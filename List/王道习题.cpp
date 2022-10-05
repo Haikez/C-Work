@@ -76,38 +76,18 @@ void deleteAtoB(LinkList &L, int A, int B)
 // 8.给定两个单链表，编写算法找出两个链表的公共结点
 LNode *searchCommon(LinkList L, LinkList L1)
 {
-    LNode *p = L->next;
-    LNode *q = L1->next;
-    int cnt1 = 0, cnt2 = 0;
-    while (p)
+    if(!L||!L1) return L?L:L1;
+    LNode *La=L;
+    LNode *Lb=L1;
+    while (La!=Lb)
     {
-        cnt1++;
-        p = p->next;
+        La=La?La->next:L1;
+        Lb=Lb?Lb->next:L;
     }
-    while (q)
-    {
-        cnt2++;
-        q = q->next;
-    }
-    p = L->next;
-    q = L1->next;
-    if (cnt1 > cnt2)
-    {
-        for (int i = 0; i < cnt1 - cnt2; i++)
-            p = p->next;
-    }
-    else
-    {
-        for (int i = 0; i < cnt2 - cnt1; i++)
-            q = q->next;
-    }
-    while (p != q)
-    {
-        p = p->next;
-        q = q->next;
-    }
-    cout << p->data;
-    return q;
+    if (La)
+        cout<<La->data;
+    else cout<<"无公共结点";
+    return La;
 }
 // 10 将一个单链表拆成一奇一偶链表
 LinkList DisCreate(LinkList &A)
@@ -177,10 +157,10 @@ int main()
     // 7
     // deleteAtoB(L,3,5);
     // 8
-    // LNode *p = L->next->next->next->next;
-    // LNode *q = L1->next->next->next;
-    // q->next = p;
-    // searchCommon(L, L1);
+    LNode *p = L->next->next;
+    LNode *q = L1->next->next->next;
+    q->next= p;
+    searchCommon(L, L1);
     // 10
     // LinkList B = DisCreate(L1);
     // printList(L1);
