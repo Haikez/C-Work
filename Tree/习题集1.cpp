@@ -35,9 +35,7 @@ BTree PreInCreate(int A[], int B[], int l1, int r1, int l2, int r2)
         root->lchild = NULL;
     if (rlen)
     {
-        // root->rchild = PreInCreate(A, B, r1 - rlen + 1, r1, r2 - rlen + 1, r2);
         root->rchild = PreInCreate(A, B, r1 - rlen + 1, r1, l2 + llen + 1, r2);
-
     }
     else
         root->rchild = NULL;
